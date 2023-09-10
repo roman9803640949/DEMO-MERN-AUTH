@@ -1,3 +1,5 @@
+import { User } from "../models/index.js";
+import asyncHandler from "express-async-handler";
 // @desc    Auth user/set token
 // route    POST /api/users/auth
 // @access  Public
@@ -8,9 +10,9 @@ export const authUser = async (req, res) => {
 // @desc    Register a new user
 // route    POST /api/users
 // @access  Public
-export const registerUser = async (req, res) => {
+export const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-  const userExist = User.findOne({ email });
+  const userExist = await User.findOne({ email });
   if (userExist) {
     res.status(400);
     throw new Error("User already exists");
@@ -31,7 +33,7 @@ export const registerUser = async (req, res) => {
     res.status(400);
     throw new Error("Invalid User Data");
   }
-};
+});
 
 // @desc    Logout user
 // route    POST /api/users/logout
