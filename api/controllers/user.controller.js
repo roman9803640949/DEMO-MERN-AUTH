@@ -1,5 +1,6 @@
 import { User } from "../models/index.js";
 import asyncHandler from "express-async-handler";
+import { generateToken } from "../utils/index.js";
 // @desc    Auth user/set token
 // route    POST /api/users/auth
 // @access  Public
@@ -24,6 +25,7 @@ export const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (user) {
+    generateToken(res, user.id);
     res.status(201).json({
       _id: user._id,
       name: user.name,
@@ -31,7 +33,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(400);
-    throw new Error("Invalid User Data");
+    throw new Error("Invalid email or password");
   }
 });
 
